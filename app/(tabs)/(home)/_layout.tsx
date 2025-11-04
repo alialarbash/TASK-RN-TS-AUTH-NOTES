@@ -13,6 +13,7 @@ const HomeLayout = () => {
         headerTitleStyle: {
           color: colors.white,
         },
+        
       }}
     >
       <Stack.Screen name="index" options={{ title: "Home" }} />

@@ -11,8 +11,8 @@ export default function RootLayout() {
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.primary }}>
         <QueryClientProvider client={queryClient}>
           <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(auth)" />
             <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="(auth)" />
           </Stack>
         </QueryClientProvider>
         <StatusBar barStyle={"light-content"} />
