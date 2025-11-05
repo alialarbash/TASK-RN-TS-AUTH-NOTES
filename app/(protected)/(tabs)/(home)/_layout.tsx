@@ -1,4 +1,4 @@
-import colors from "../../../data/styling/colors";
+import colors from "../../../../data/styling/colors";
 import { Stack } from "expo-router";
 import React from "react";
 
@@ -13,7 +13,6 @@ const HomeLayout = () => {
         headerTitleStyle: {
           color: colors.white,
         },
-        
       }}
     >
       <Stack.Screen name="index" options={{ title: "Home" }} />

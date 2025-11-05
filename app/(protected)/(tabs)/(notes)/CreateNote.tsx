@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import colors from "../../../data/styling/colors";
+import colors from "../../../../data/styling/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const AddNote = () => {

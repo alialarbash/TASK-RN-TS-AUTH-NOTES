@@ -1,6 +1,6 @@
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import colors from "../../../data/styling/colors";
+import colors from "../../../../data/styling/colors";
 import { useQuery } from "@tanstack/react-query";
 import { getNote } from "@/api/notes";
 import { useLocalSearchParams } from "expo-router";

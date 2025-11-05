@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, ActivityIndicator, View } from "react-native";
 import React from "react";
-import colors from "../../../data/styling/colors";
-import UserProfileCard from "../../../components/UserProfileCard";
+import colors from "../../../../data/styling/colors";
+import UserProfileCard from "../../../../components/UserProfileCard";
 import { useQuery } from "@tanstack/react-query";
 import { getAllUsers } from "@/api/auth";
 

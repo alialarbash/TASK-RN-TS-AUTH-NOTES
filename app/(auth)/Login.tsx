@@ -7,10 +7,31 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useContext, useState } from "react";
 import colors from "../../data/styling/colors";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "@/api/auth";
+import UserInfo from "@/types/UserInfo";
+import { storeToken } from "@/api/storage";
+import { useRouter } from "expo-router";
+import AuthContext from "@/context/AuthContext";
 
 const Index = () => {
+  const { setIsAuthenticated } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+  const { mutate } = useMutation({
+    mutationKey: ["login"],
+    mutationFn: (userInfo: UserInfo) =>
+      login({ email: userInfo.email, password: userInfo.password }),
+    onSuccess: async (data) => {
+      console.log(data);
+      await storeToken(data.token);
+      setIsAuthenticated(true);
+      router.push("/");
+    },
+  });
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -37,6 +58,7 @@ const Index = () => {
               borderRadius: 5,
               marginTop: 20,
             }}
+            onChangeText={setEmail}
             placeholder="Email"
           />
 
@@ -47,6 +69,7 @@ const Index = () => {
               borderRadius: 5,
               marginTop: 20,
             }}
+            onChangeText={setPassword}
             placeholder="Password"
           />
 
@@ -58,7 +81,9 @@ const Index = () => {
               marginTop: 20,
               alignItems: "center",
             }}
-            onPress={() => {}}
+            onPress={() => {
+              mutate({ email, password });
+            }}
           >
             <Text
               style={{

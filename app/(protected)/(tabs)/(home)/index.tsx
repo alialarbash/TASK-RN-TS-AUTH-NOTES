@@ -6,8 +6,8 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import colors from "../../../data/styling/colors";
-import Note from "../../../components/Note";
+import colors from "../../../../data/styling/colors";
+import Note from "../../../../components/Note";
 import { useQuery } from "@tanstack/react-query";
 import { getAllNotes } from "@/api/notes";
 import { NoteType } from "@/types/NoteType";
