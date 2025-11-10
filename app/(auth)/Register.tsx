@@ -1,4 +1,5 @@
 import {
+  Image,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -7,9 +8,58 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import colors from "../../data/styling/colors";
+import { useMutation } from "@tanstack/react-query";
+import UserInfo from "@/types/UserInfo";
+import { register } from "@/api/auth";
+import { useRouter } from "expo-router";
+import * as imagePicker from "expo-image-picker";
+import { storeToken } from "@/api/storage";
+import { useContext } from "react";
+import AuthContext from "@/context/AuthContext";
+
 const Register = () => {
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [image, setImage] = useState<string | null>(null);
+  const { setIsAuthenticated } = useContext(AuthContext);
+
+  const pickImage = async () => {
+    let result = await imagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images", "videos"],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  const { mutate } = useMutation({
+    mutationKey: ["register"],
+    mutationFn: () => {
+      return register({ email, password }, image || "", name);
+    },
+    onSuccess: async (data) => {
+      await storeToken(data.token);
+      setIsAuthenticated(true);
+    },
+  });
+
+  const handleRegister = () => {
+    if (email && password && image && name) {
+      mutate();
+    } else {
+      alert("Please fill in all fields");
+    }
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -46,7 +96,10 @@ const Register = () => {
               borderRadius: 5,
               marginTop: 20,
             }}
-            placeholder="Email"
+            onChangeText={setName}
+            value={name}
+            autoCapitalize="none"
+            placeholder="Name"
           />
 
           <TextInput
@@ -56,13 +109,38 @@ const Register = () => {
               borderRadius: 5,
               marginTop: 20,
             }}
+            onChangeText={setEmail}
+            value={email}
+            autoCapitalize="none"
+            placeholder="Email"
+            keyboardType="email-address"
+          />
+
+          <TextInput
+            style={{
+              backgroundColor: colors.white,
+              padding: 10,
+              borderRadius: 5,
+              marginTop: 20,
+            }}
+            onChangeText={setPassword}
+            value={password}
+            autoCapitalize="none"
+            secureTextEntry={true}
             placeholder="Password"
           />
 
-          <TouchableOpacity style={{ marginTop: 20 }}>
-            <Text style={{ color: colors.white, fontSize: 16 }}>
-              Upload Profile Image
-            </Text>
+          <TouchableOpacity style={{ marginTop: 20 }} onPress={pickImage}>
+            {image ? (
+              <Image
+                source={{ uri: image }}
+                style={{ width: 150, height: 150, borderRadius: 100 }}
+              />
+            ) : (
+              <Text style={{ color: colors.white, fontSize: 16 }}>
+                Upload Profile Image
+              </Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -72,6 +150,9 @@ const Register = () => {
               borderRadius: 5,
               marginTop: 20,
               alignItems: "center",
+            }}
+            onPress={() => {
+              handleRegister();
             }}
           >
             <Text
@@ -85,7 +166,12 @@ const Register = () => {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={{ marginTop: 20, alignItems: "center" }}>
+          <TouchableOpacity
+            style={{ marginTop: 20, alignItems: "center" }}
+            onPress={() => {
+              router.push("/Login");
+            }}
+          >
             <Text style={{ color: colors.white, fontSize: 16 }}>
               Already have an account?{" "}
               <Text style={{ color: colors.white, fontWeight: "bold" }}>

@@ -1,8 +1,13 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../../../../data/styling/colors";
 import { Stack } from "expo-router";
-import React from "react";
+import React, { useContext } from "react";
+import { TouchableOpacity } from "react-native";
+import { deleteToken } from "@/api/storage";
+import AuthContext from "@/context/AuthContext";
 
 const HomeLayout = () => {
+  const { setIsAuthenticated } = useContext(AuthContext);
   return (
     <Stack
       screenOptions={{
@@ -16,7 +21,24 @@ const HomeLayout = () => {
       }}
     >
       <Stack.Screen name="index" options={{ title: "Home" }} />
-      <Stack.Screen name="[noteId]" options={{ title: "Note Details" }} />
+      <Stack.Screen
+        name="[noteId]"
+        options={{
+          title: "Note Details",
+          headerRight: () => {
+            return (
+              <TouchableOpacity
+                onPress={async () => {
+                  await deleteToken();
+                  setIsAuthenticated(false);
+                }}
+              >
+                <MaterialIcons name="logout" color={"#ff0f0f"} size={32} />
+              </TouchableOpacity>
+            );
+          },
+        }}
+      />
     </Stack>
   );
 };

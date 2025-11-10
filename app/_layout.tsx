@@ -3,11 +3,22 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import colors from "../data/styling/colors";
 import { StatusBar } from "react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AuthContext from "@/context/AuthContext";
+import { getToken } from "@/api/storage";
 export default function RootLayout() {
   const queryClient = new QueryClient();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await getToken();
+      if (token) {
+        setIsAuthenticated(true);
+      }
+    };
+    checkToken();
+  }, [isAuthenticated]);
 
   return (
     <SafeAreaProvider>
@@ -15,7 +26,7 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
             <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="(protected)" />
               <Stack.Screen name="(auth)" />
             </Stack>
           </AuthContext.Provider>

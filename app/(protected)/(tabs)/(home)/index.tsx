@@ -58,6 +58,7 @@ const Home = () => {
         }}
         contentContainerStyle={{
           flexGrow: 1,
+          flexDirection: "column-reverse",
         }}
         showsVerticalScrollIndicator={false}
       >

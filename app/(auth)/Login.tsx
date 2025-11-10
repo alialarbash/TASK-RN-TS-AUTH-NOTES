@@ -21,6 +21,7 @@ const Index = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+
   const { mutate } = useMutation({
     mutationKey: ["login"],
     mutationFn: (userInfo: UserInfo) =>
@@ -29,9 +30,14 @@ const Index = () => {
       console.log(data);
       await storeToken(data.token);
       setIsAuthenticated(true);
-      router.push("/");
+      router.push("/(protected)/(tabs)");
+    },
+    onError: (error) => {
+      console.log(error);
+      setIsAuthenticated(false);
     },
   });
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -59,7 +65,10 @@ const Index = () => {
               marginTop: 20,
             }}
             onChangeText={setEmail}
+            value={email}
+            autoCapitalize="none"
             placeholder="Email"
+            keyboardType="email-address"
           />
 
           <TextInput
@@ -71,6 +80,9 @@ const Index = () => {
             }}
             onChangeText={setPassword}
             placeholder="Password"
+            value={password}
+            autoCapitalize="none"
+            secureTextEntry={true}
           />
 
           <TouchableOpacity
@@ -95,13 +107,18 @@ const Index = () => {
               Login
             </Text>
           </TouchableOpacity>
-
-          <Text style={{ color: colors.white, fontSize: 16 }}>
-            Don't have an account?{" "}
-            <Text style={{ color: colors.white, fontWeight: "bold" }}>
-              Register
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/Register");
+            }}
+          >
+            <Text style={{ color: colors.white, fontSize: 16 }}>
+              Don't have an account?{" "}
+              <Text style={{ color: colors.white, fontWeight: "bold" }}>
+                Register
+              </Text>
             </Text>
-          </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </KeyboardAvoidingView>
