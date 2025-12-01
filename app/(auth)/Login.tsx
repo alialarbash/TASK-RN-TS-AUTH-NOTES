@@ -30,7 +30,7 @@ const Index = () => {
       console.log(data);
       await storeToken(data.token);
       setIsAuthenticated(true);
-      router.push("/(protected)/(tabs)");
+      // router.push("/(protected)/(tabs)");
     },
     onError: (error) => {
       console.log(error);

@@ -14,7 +14,7 @@ const register = async (userInfo: UserInfo, image: string, name: string) => {
   formData.append("image", {
     uri: image,
     name: "image",
-    type: "image/jpeg",
+    type: ["image/jpeg"],
   } as any);
   const { data } = await instance.post("/auth/register", formData);
   return data;

@@ -28,6 +28,15 @@ const Register = () => {
   const { setIsAuthenticated } = useContext(AuthContext);
 
   const pickImage = async () => {
+    if (Platform.OS !== "web") {
+      const { status } =
+        await imagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to upload images!");
+        return;
+      }
+    }
+
     let result = await imagePicker.launchImageLibraryAsync({
       mediaTypes: ["images", "videos"],
       allowsEditing: true,
@@ -44,12 +53,16 @@ const Register = () => {
 
   const { mutate } = useMutation({
     mutationKey: ["register"],
-    mutationFn: () => {
-      return register({ email, password }, image || "", name);
+    mutationFn: async () => {
+      return await register({ email, password }, image || "", name);
     },
     onSuccess: async (data) => {
       await storeToken(data.token);
       setIsAuthenticated(true);
+    },
+    onError: (error) => {
+      console.log(error);
+      setIsAuthenticated(false);
     },
   });
 

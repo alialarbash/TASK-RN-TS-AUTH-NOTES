@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import AuthContext from "@/context/AuthContext";
 import { getToken } from "@/api/storage";
+
 export default function RootLayout() {
   const queryClient = new QueryClient();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
